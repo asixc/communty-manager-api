@@ -1,0 +1,28 @@
+# MacOS system files
+.DS_Store
+
+# Maven build directory
+/target/
+
+# Gradle build directory
+/build/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+
+# Spring Boot configuration files
+/application*.yml
+/application*.properties
+
+# Log files
+/logs/
+
+# Test output
+/test-output/
+mvnw
+mvnw.cmd
+
