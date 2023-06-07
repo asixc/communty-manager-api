@@ -7,15 +7,19 @@ import dev.jotxee.security.token.TokenType;
 import dev.jotxee.security.user.Role;
 import dev.jotxee.security.user.User;
 import dev.jotxee.security.user.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Set;
 
+import static java.lang.String.format;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -79,5 +83,19 @@ public class AuthenticationService {
       token.setRevoked(true);
     });
     tokenRepository.saveAll(validUserTokens);
+  }
+
+  @PostConstruct
+  private void createAdminUser() {
+    var user = User.builder()
+            .firstname("Jotxee")
+            .lastname("admin")
+            .email("jose@jose.com")
+            .password(passwordEncoder.encode("admin"))
+            .roles(Set.of(Role.ADMIN))
+            .enabled(true)
+            .build();
+    var savedUser = repository.save(user);
+    log.info(format("Admin user created %s", savedUser));
   }
 }
