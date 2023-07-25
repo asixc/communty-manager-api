@@ -4,6 +4,7 @@ import dev.jotxee.security.user.User;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
@@ -12,7 +13,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "payments")
-public class Payment {
+public class Payment implements Serializable {
     @Id
     @GeneratedValue // @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
