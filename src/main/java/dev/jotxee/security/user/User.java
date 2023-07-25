@@ -4,6 +4,7 @@ import dev.jotxee.security.comunity.repository.Payment;
 import dev.jotxee.security.token.Token;
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -47,7 +48,6 @@ public class User implements UserDetails {
   @Enumerated(EnumType.STRING)
   private Set<Role> roles;
 
-
   @OneToMany(mappedBy = "user")
   private List<Token> tokens;
 /*
@@ -62,7 +62,6 @@ public class User implements UserDetails {
             .map(role -> new SimpleGrantedAuthority(role.name()))
             .toList();
   }
-
 
   @Override
   public String getPassword() {

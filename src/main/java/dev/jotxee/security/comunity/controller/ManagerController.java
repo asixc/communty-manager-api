@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 @Slf4j
 @RestController
@@ -16,21 +17,21 @@ public class ManagerController {
 
     //private final UserRepository repository;
 
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping("/receipts")
     public ResponseEntity getReceipts(){
         // cada usuario esta asociado a una vivienda
         // 1 Buscamos la vivienda asociada al usuario
         // 2 devolvemos l
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(Collections.emptyList());
     }
 
     @PutMapping("/users/{id}/associate/{floor}") // EJEMPLO: PUT /users/123/associate/456 HTTP/1.1
     public ResponseEntity associateUserToFloor(@PathVariable final Integer id, @PathVariable final Long floor){
-         if(userService.getUserById(id) != null); // Si el usuario existe comprobamos si algún usuario tiene ese piso asociado
+         if(userService.getUserById(id) != null) // Si el usuario existe comprobamos si algún usuario tiene ese piso asociado
             log.info("User found");
-        return ResponseEntity.ok(new ArrayList<>());
+        return ResponseEntity.ok(Collections.emptyList());
     }
     /*
     public ResponseEntity<?> updateUserFloor(@PathVariable Long id, @RequestBody User user) {
