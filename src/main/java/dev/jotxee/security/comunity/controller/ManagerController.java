@@ -1,13 +1,18 @@
 package dev.jotxee.security.comunity.controller;
 
+import java.util.Collections;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import dev.jotxee.security.comunity.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 @Slf4j
 @RestController
@@ -19,12 +24,19 @@ public class ManagerController {
 
     private final UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/receipts")
     public ResponseEntity getReceipts(){
         // cada usuario esta asociado a una vivienda
         // 1 Buscamos la vivienda asociada al usuario
         // 2 devolvemos l
         return ResponseEntity.ok(Collections.emptyList());
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/test")
+    public ResponseEntity<String>  getTest(){
+        return ResponseEntity.ok("TESTING USER WITH USER ROLE");
     }
 
     @PutMapping("/users/{id}/associate/{floor}") // EJEMPLO: PUT /users/123/associate/456 HTTP/1.1

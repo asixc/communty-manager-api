@@ -1,6 +1,14 @@
 package dev.jotxee.security.auth;
 
-import dev.jotxee.security.config.JwtService;
+import java.util.Set;
+import java.util.List;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import dev.jotxee.security.jwt.JwtService;
 import dev.jotxee.security.token.Token;
 import dev.jotxee.security.token.TokenRepository;
 import dev.jotxee.security.token.TokenType;
@@ -8,13 +16,6 @@ import dev.jotxee.security.user.Role;
 import dev.jotxee.security.user.User;
 import dev.jotxee.security.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -26,16 +27,16 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
-    var user = User.builder()
+    final User user = User.builder()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
         .email(request.getEmail())
         .password(passwordEncoder.encode(request.getPassword()))
-        .roles(Set.of(Role.USER))
+        .roles(Set.of(Role.USER, Role.ADMIN))
         .enabled(false)
         .build();
-    var savedUser = repository.save(user);
-    var jwtToken = jwtService.generateToken(user);
+    final User savedUser = repository.save(user);
+    final String jwtToken = jwtService.generateToken(user);
     saveUserToken(savedUser, jwtToken);
     return AuthenticationResponse.builder()
         .token(jwtToken)
@@ -59,8 +60,8 @@ public class AuthenticationService {
         .build();
   }
 
-  private void saveUserToken(User user, String jwtToken) {
-    var token = Token.builder()
+  private void saveUserToken(final User user, final String jwtToken) {
+    final Token token = Token.builder()
         .user(user)
         .token(jwtToken)
         .tokenType(TokenType.BEARER)
@@ -70,8 +71,8 @@ public class AuthenticationService {
     tokenRepository.save(token);
   }
 
-  private void revokeAllUserTokens(User user) {
-    var validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
+  private void revokeAllUserTokens(final User user) {
+    final List<Token> validUserTokens = tokenRepository.findAllValidTokenByUser(user.getId());
     if (validUserTokens.isEmpty())
       return;
     validUserTokens.forEach(token -> {
