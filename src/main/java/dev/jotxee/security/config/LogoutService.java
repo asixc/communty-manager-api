@@ -1,5 +1,6 @@
 package dev.jotxee.security.config;
 
+import dev.jotxee.security.token.Token;
 import dev.jotxee.security.token.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -17,9 +18,9 @@ public class LogoutService implements LogoutHandler {
 
   @Override
   public void logout(
-      HttpServletRequest request,
-      HttpServletResponse response,
-      Authentication authentication
+      final HttpServletRequest request,
+      final HttpServletResponse response,
+      final Authentication authentication
   ) {
     final String authHeader = request.getHeader("Authorization");
     final String jwt;
@@ -27,8 +28,7 @@ public class LogoutService implements LogoutHandler {
       return;
     }
     jwt = authHeader.substring(7);
-    var storedToken = tokenRepository.findByToken(jwt)
-        .orElse(null);
+    final Token storedToken = tokenRepository.findByToken(jwt).orElse(null);
     if (storedToken != null) {
       storedToken.setExpired(true);
       storedToken.setRevoked(true);
